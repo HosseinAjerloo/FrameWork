@@ -3,10 +3,10 @@ namespace App\Http\Request;
 
 use System\Request\Request;
 
-class UserRequest extends Request
+class PostRequest extends Request
 {
         public function hossein()
         {
-                echo 'UserRequest';
+                echo 'postRequest';
         }
 }

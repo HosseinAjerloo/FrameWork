@@ -13,7 +13,7 @@ class Routing
     private $routes;
     private $value = [];
     private $methodParameter = [];
-    private $methodParameterPosition;
+
 
     public function __construct()
     {
@@ -66,11 +66,14 @@ class Routing
 
                     $request = new($parameter->getClass()->name)();
                     $this->methodParameter[$parameter->getPosition()] = $request;
-                    $this->methodParameterPosition = $parameter->getPosition();
+
 
                 }
             }
+
             $this->setParameterForMethodCalled();
+
+
             $this->callMethod($class, $objectClass['method']);
 
 
@@ -87,18 +90,25 @@ class Routing
     private function setParameterForMethodCalled()
     {
 
-        if ($this->methodParameterPosition !== null and $this->methodParameterPosition == 0) {
-            $this->methodParameter = array_merge($this->methodParameter, $this->value);
-        } else {
-            foreach ($this->value as $key => $value) {
-                if ($this->methodParameterPosition !== null and $key == $this->methodParameterPosition) {
-                    echo $this->methodParameterPosition;
+
+        foreach ($this->value as $key => $value) {
+            $status = true;
+
+            while ($status) {
+                if (!empty($this->methodParameter) and in_array($key, array_keys($this->methodParameter))) {
                     $key+=1;
+                } else {
+                    $status=false;
                 }
-                $this->methodParameter[$key] = $value;
-                ksort($this->methodParameter);
             }
+
+            $this->methodParameter[$key] = $value;
+            ksort($this->methodParameter);
         }
+    }
+
+    private function findPositionParameter()
+    {
 
     }
 
