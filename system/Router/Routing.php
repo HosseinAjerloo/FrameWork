@@ -89,11 +89,8 @@ class Routing
 
     private function setParameterForMethodCalled()
     {
-
-
         foreach ($this->value as $key => $value) {
             $status = true;
-
             while ($status) {
                 if (!empty($this->methodParameter) and in_array($key, array_keys($this->methodParameter))) {
                     $key+=1;
