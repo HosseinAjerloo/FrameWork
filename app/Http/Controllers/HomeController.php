@@ -4,8 +4,9 @@ use App\Http\Request\UserRequest;
 
 class HomeController
 {
-        public function index()
+        public function index($id,$name,UserRequest $request)
         {
-            echo 'hossein';
+
+
         }
 }

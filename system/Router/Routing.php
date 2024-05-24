@@ -13,7 +13,7 @@ class Routing
     private $routes;
     private $value = [];
     private $methodParameter = [];
-    private $methodParameterPosition = null;
+    private $methodParameterPosition;
 
     public function __construct()
     {
@@ -61,35 +61,45 @@ class Routing
                 throw new \Exception('The number of values ​​passed to the desired method is incorrect');
 
             foreach ($reflectionParameterNum as $parameter) {
+
                 if ($parameter->getClass() and $parameter->getClass()->getParentClass()->name === 'System\Request\Request') {
 
                     $request = new($parameter->getClass()->name)();
                     $this->methodParameter[$parameter->getPosition()] = $request;
                     $this->methodParameterPosition = $parameter->getPosition();
+
                 }
             }
             $this->setParameterForMethodCalled();
-            $this->callMethod($class,$objectClass['method']);
+            $this->callMethod($class, $objectClass['method']);
 
 
         } catch (\Exception $e) {
             exit($e->getMessage());
         }
     }
-    private function callMethod($class,$method)
+
+    private function callMethod($class, $method)
     {
-        ksort($this->methodParameter);
         return call_user_func_array(array($class, $method), $this->methodParameter);
     }
 
     private function setParameterForMethodCalled()
     {
-        foreach ($this->value as $key => $value) {
-            if ($this->methodParameterPosition !== null and $this->methodParameterPosition == $key) {
-                $key++;
+
+        if ($this->methodParameterPosition !== null and $this->methodParameterPosition == 0) {
+            $this->methodParameter = array_merge($this->methodParameter, $this->value);
+        } else {
+            foreach ($this->value as $key => $value) {
+                if ($this->methodParameterPosition !== null and $key == $this->methodParameterPosition) {
+                    echo $this->methodParameterPosition;
+                    $key+=1;
+                }
+                $this->methodParameter[$key] = $value;
+                ksort($this->methodParameter);
             }
-            $this->methodParameter[$key] = $value;
         }
+
     }
 
 

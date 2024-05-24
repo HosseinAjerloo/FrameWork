@@ -12,7 +12,6 @@ class Route
     public static function get($uri, $object)
     {
         global $routes;
-
         try {
             if (sizeof($object) == 2) {
                 $controller = $object[0];
