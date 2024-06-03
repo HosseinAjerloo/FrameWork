@@ -6,8 +6,19 @@ use System\Database\Traits\HasMethodCaller;
 use System\Database\Traits\HasQueryBuilder;
 use System\Database\Traits\HasRelation;
 use System\Database\Traits\HasSoftDelete;
+use System\Database\Traits\ModelSetting;
 
 abstract class Model
 {
-    use HasAttributes,HasCRUD,HasRelation,HasQueryBuilder,HasSoftDelete,HasMethodCaller;
+    use ModelSetting,HasAttributes,HasCRUD,HasRelation,HasQueryBuilder,HasSoftDelete,HasMethodCaller;
+   protected $table;
+    protected $filable=[];
+    protected $casts=[];
+    protected $hidden=[];
+    protected $createdAt='created_at';
+    protected $updatedAt='updated_at';
+    protected $deletedAt=null;
+    protected $collection=[];
+    protected $primaryKey='id';
+
 }
