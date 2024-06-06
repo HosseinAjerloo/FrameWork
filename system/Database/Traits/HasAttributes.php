@@ -22,33 +22,46 @@ trait HasAttributes
         return $object;
     }
 
-    protected function arrayToObject()
+    protected function arrayToObject($array)
     {
-
+        $collection = array();
+        foreach ($array as $value) {
+            array_push($collection, $this->arrayToAttributes($value));
+        }
+        $this->collection = $collection;
     }
 
     protected function inHiddenAttributes($attribute): bool
     {
-        return false;
+        return in_array($attribute, $this->hidden);
     }
 
     private function inCastsAttributes($attribute): bool
     {
-        return false;
+        return in_array($attribute, array_keys($this->casts));
     }
 
-    private function castDeCodeValue()
+    private function castDeCodeValue($attribute, $value)
     {
-
+        $reflection = $this->getInstanceReflection($this->casts[$attribute]);
+        $classObj = $reflection->newInstanceWithoutConstructor();
+        return $classObj->getCastValue($attribute, $value);
     }
 
-    protected function castEnCodeValue()
+    protected function castEnCodeValue($attribute, $value)
     {
-
+        $reflection = $this->getInstanceReflection($this->casts[$attribute]);
+        $classObj = $reflection->newInstanceWithoutConstructor();
+        return $classObj->toCastValue($attribute, $value);
     }
 
-    private function arrayToCastEnCodeValue()
+    private function arrayToCastEnCodeValue($values)
     {
-
+        $newValues = array();
+        foreach ($values as $attribute => $value) {
+            $this->inCastsAttributes($attribute) == true ? $newValues[$attribute] = $this->castEnCodeValue($attribute, $value) : $newValues[$attribute] = $value;
+        }
+        return $newValues;
     }
+
 }

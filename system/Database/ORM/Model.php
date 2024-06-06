@@ -1,5 +1,6 @@
 <?php
 namespace System\Database\ORM;
+use App\Casts\ProfileCast;
 use System\Database\Traits\HasAttributes;
 use System\Database\Traits\HasCRUD;
 use System\Database\Traits\HasMethodCaller;
@@ -13,7 +14,9 @@ abstract class Model
     use ModelSetting,HasAttributes,HasCRUD,HasRelation,HasQueryBuilder,HasSoftDelete,HasMethodCaller;
    protected $table;
     protected $filable=[];
-    protected $casts=[];
+    protected $casts=[
+        'profile'=>ProfileCast::class
+    ];
     protected $hidden=[];
     protected $createdAt='created_at';
     protected $updatedAt='updated_at';

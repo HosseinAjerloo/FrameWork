@@ -8,11 +8,15 @@ trait ModelSetting
     {
         $this->table==null?$this->table=$this->defaultTableName():null;
 
-        echo $this->primaryKey;
     }
 
     protected function defaultTableName()
     {
         return  strtolower((new \ReflectionClass(get_called_class()))->getShortName()).'s';
+    }
+    protected function getInstanceReflection($class)
+    {
+        $reflection=new \ReflectionClass($class);
+        return $reflection;
     }
 }

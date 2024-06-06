@@ -22,7 +22,7 @@ class DBConnection
             exit($exception->getMessage());
         }
     }
-    public function newInsertID()
+    public static  function newInsertID()
     {
         return self::getInstanceDBConnection()->lastInsertId();
     }

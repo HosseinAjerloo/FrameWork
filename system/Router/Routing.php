@@ -168,4 +168,5 @@ class Routing
         }
         return $method;
     }
+
 }
