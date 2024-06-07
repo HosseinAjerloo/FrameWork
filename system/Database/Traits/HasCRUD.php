@@ -76,7 +76,7 @@ trait HasCRUD
     protected function findMethod($id)
     {
         $this->setSql('SELECT ' . $this->getTableName() . '.*' . ' FROM ' . $this->getTableName());
-        $this->setWhere('AND', $this->getAttributeName($this->primaryKey)."=?");
+        $this->setWhere('AND', $this->getAttributeName($this->primaryKey) . "=?");
         $this->addValues($this->primaryKey, $id);
         $statement = $this->executeQuery();
         $record = $statement->fetch();
@@ -85,5 +85,108 @@ trait HasCRUD
         if ($record)
             return $this->arrayToAttributes($record);
         return null;
+    }
+
+    protected function whereMethod($attribute, $firstValue, $secondValue = null)
+    {
+        if ($secondValue === null) {
+            $condition = $this->getAttributeName($attribute) . " =?";
+            $this->addValues($attribute, $firstValue);
+        } else {
+            $condition = $this->getAttributeName($attribute) . " $firstValue " . '?';
+            $this->addValues($attribute, $secondValue);
+        }
+        $operation = 'AND';
+        $this->setWhere($operation, $condition);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        return $this;
+
+    }
+
+    protected function whereOrMethod($attribute, $firstValue, $secondValue = null)
+    {
+        if ($secondValue === null) {
+            $condition = $this->getAttributeName($attribute) . " =?";
+            $this->addValues($attribute, $firstValue);
+        } else {
+            $condition = $this->getAttributeName($attribute) . " $firstValue " . '?';
+            $this->addValues($attribute, $secondValue);
+        }
+        $operation = 'OR';
+        $this->setWhere($operation, $condition);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        return $this;
+
+    }
+
+    protected function whereNotNullMethod($attribute)
+    {
+        $this->setWhere('AND', $this->getAttributeName($attribute) . ' IS NOT NULL ');
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        return $this;
+    }
+
+    protected function whereNullMethod($attribute)
+    {
+        $this->setWhere('AND', $this->getAttributeName($attribute) . ' IS NULL ');
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        return $this;
+    }
+
+    protected function whereInMethod($attribute, $filed)
+    {
+        $items = array();
+        if (is_array($filed)) {
+            foreach ($filed as $value) {
+                $this->addValues($attribute, $value);
+                array_push($items, '?');
+            }
+            $condition = implode(',', $items);
+        } else {
+            $condition = '?';
+            $this->addValues($attribute, $filed);
+        }
+
+        $this->setWhere('ADN', $this->getAttributeName($attribute) . " IN (" . $condition . " )");
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'paginate']);
+        return $this;
+    }
+
+    protected function orderByMethod($attribute, $expression)
+    {
+        $this->setOrderBy($this->getAttributeName($attribute), $expression);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'limit', 'get', 'paginate']);
+        return $this;
+    }
+
+    protected function limitMethod($limit, $offset)
+    {
+        $this->setLimit($limit, $offset);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'get', 'paginate']);
+        return $this;
+    }
+
+    protected function getMethod($fields = array())
+    {
+        if ($this->getSql() == '') {
+            if (empty($fields)) {
+                $fields = $this->getTableName() . ".*";
+            } else {
+                foreach ($fields as $key => $field) {
+                    $fields[$key] = $this->getAttributeName($field);
+                }
+                $fields = implode(',', $fields);
+            }
+            $this->setSql('SELECT ' . $fields . " FROM " . $this->getTableName());
+        }
+        $statement = $this->executeQuery();
+        $data = $statement->fetchAll();
+        $this->restQuery();
+        if ($data) {
+            $this->arrayToObject($data);
+            return $this->collection;
+        }
+        return [];
+
     }
 }
