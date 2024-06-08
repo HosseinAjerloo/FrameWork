@@ -43,8 +43,11 @@ trait HasAttributes
 
     private function castDeCodeValue($attribute, $value)
     {
+
         $reflection = $this->getInstanceReflection($this->casts[$attribute]);
+
         $classObj = $reflection->newInstanceWithoutConstructor();
+
         return $classObj->getCastValue($attribute, $value);
     }
 

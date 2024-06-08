@@ -10,6 +10,7 @@ trait HasCRUD
     protected function saveMethod()
     {
         $fillable = $this->fill();
+
         if (!isset($this->{$this->primaryKey})) {
             $this->setSql("INSERT INTO " . $this->getTableName() . " SET " . $fillable . ",{$this->getAttributeName($this->createdAt)}=Now()");
         } else {
@@ -187,6 +188,19 @@ trait HasCRUD
             return $this->collection;
         }
         return [];
+    }
 
+    protected function createMethod($fields)
+    {
+        $fields = $this->arrayToCastEnCodeValue($fields);
+        $this->arrayToAttributes($fields, $this);
+        return $this->saveMethod();
+    }
+
+    protected function updateMethod($fields)
+    {
+        $fields = $this->arrayToCastEnCodeValue($fields);
+        $this->arrayToAttributes($fields, $this);
+        return $this->saveMethod();
     }
 }

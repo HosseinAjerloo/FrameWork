@@ -1,5 +1,5 @@
 <?php
 define('DBHOST','localhost');
-define('DBNAME','phpmvc');
+define('DBNAME','hossein');
 define('DBUSER','root');
 define('DBPASSWORD','');

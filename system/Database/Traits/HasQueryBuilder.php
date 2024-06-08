@@ -62,7 +62,7 @@ trait HasQueryBuilder
 
     protected function addValues($attribute, $value)
     {
-        $this->values[$attribute] = $value;
+        $this->bindValues[$attribute] = $value;
         array_push($this->values, $value);
     }
 
@@ -106,23 +106,24 @@ trait HasQueryBuilder
         $sql = $this->queryBuilder();
         $db = DBConnection::getInstanceDBConnection();
         $statement = $db->prepare($sql);
-        if (sizeof($this->values) > sizeof($this->bindValues)) {
+        if (sizeof($this->values) >= sizeof($this->bindValues)) {
             $statement->execute(array_values($this->values));
-        } elseif (sizeof($this->values) < sizeof($this->bindValues)) {
+        } elseif (sizeof($this->values) <= sizeof($this->bindValues)) {
             $statement->execute($this->bindValues);
         } else
             $statement->execute();
         return $statement;
     }
+
     protected function getTableName()
     {
-        return '`'.$this->table.'`';
-    }
-    protected function getAttributeName($attribute)
-    {
-        return $this->getTableName().'.'.'`'.$attribute.'`';
+        return '`' . $this->table . '`';
     }
 
+    protected function getAttributeName($attribute)
+    {
+        return $this->getTableName() . '.' . '`' . $attribute . '`';
+    }
 
 
 }

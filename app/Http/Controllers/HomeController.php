@@ -10,6 +10,6 @@ class HomeController
 {
     public function index()
     {
-        $user=new User();
+
     }
 }

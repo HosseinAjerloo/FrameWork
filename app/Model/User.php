@@ -5,7 +5,8 @@ use System\Database\ORM\Model;
 
 class User extends Model
 {
-    protected $table='hossien';
+
+    protected $filable=['name','family','phone'];
     protected $casts=[
         'name'=>UserNaemCast::class
     ];
