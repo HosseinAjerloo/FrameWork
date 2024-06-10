@@ -10,6 +10,7 @@ class HomeController
 {
     public function index()
     {
-
+            $user=User::get();
+            dd($user,$this);
     }
 }

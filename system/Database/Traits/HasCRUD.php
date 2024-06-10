@@ -48,7 +48,7 @@ trait HasCRUD
         return $fillString;
     }
 
-    protected function delete($id = null)
+    protected function deleteMethod($id = null)
     {
         $object = $this;
         if (isset($id)) {
@@ -83,7 +83,7 @@ trait HasCRUD
         $record = $statement->fetch();
         $this->restQuery();
         $this->setAllowedMethods(['delete', 'update', 'save']);
-        if ($record)
+        if (!empty($record))
             return $this->arrayToAttributes($record);
         return null;
     }

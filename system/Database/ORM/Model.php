@@ -11,7 +11,7 @@ use System\Database\Traits\ModelSetting;
 
 abstract class Model
 {
-    use ModelSetting,HasAttributes,HasCRUD,HasRelation,HasQueryBuilder,HasSoftDelete,HasMethodCaller;
+    use ModelSetting,HasAttributes,HasCRUD,HasRelation,HasQueryBuilder,HasMethodCaller;
    protected $table;
     protected $filable=[];
     protected $casts=[
@@ -20,7 +20,7 @@ abstract class Model
     protected $hidden=[];
     protected $createdAt='created_at';
     protected $updatedAt='updated_at';
-    protected $deletedAt=null;
+    protected $deletedAt='deleted_at';
     protected $collection=[];
     protected $primaryKey='id';
 
