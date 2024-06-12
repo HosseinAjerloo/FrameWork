@@ -52,18 +52,20 @@ trait HasRelation
         return $this->belongToRelation($related, $pivotKey);
     }
 
-    private function belongToRelation($related,$pivotKey)
+    private function belongToRelation($related, $pivotKey)
     {
-        $this->setSql('SELECT `b`.*  FROM '.$this->getTableName() . ' as `a` JOIN  ' . $related->getTableName() .' as `b` ON  a.'.$pivotKey."= b.".$related->primaryKey);
-        $this->setWhere('ADN'," a.{$this->primaryKey}=?");
-        $this->addValues($this->primaryKey,$this->{$this->primaryKey});
+        $this->setSql('SELECT `b`.*  FROM ' . $this->getTableName() . ' as `a` JOIN  ' . $related->getTableName() . ' as `b` ON  a.' . $pivotKey . "= b." . $related->primaryKey);
+        $this->setWhere('ADN', " a.{$this->primaryKey}=?");
+        $this->addValues($this->primaryKey, $this->{$this->primaryKey});
         $statement = $this->executeQuery();
         $record = $statement->fetch();
         if ($statement) {
             return $this->arrayToAttributes($record);
         }
         return null;
-
     }
+
+
+    
 
 }
