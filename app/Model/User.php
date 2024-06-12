@@ -13,9 +13,8 @@ class User extends Model
 
 
     protected $filable = ['name', 'family', 'phone'];
-    protected $casts = [
-        'name' => UserNaemCast::class
-    ];
+    protected $deletedAt='deleted_at';
+
 
     public function profile()
     {
@@ -25,5 +24,9 @@ class User extends Model
     public function profiles()
     {
         return $this->hasMany(Post::class,'user_id');
+    }
+    public function roles()
+    {
+        return $this->belongToMany(Role::class,'role_user','user_id','role_id');
     }
 }

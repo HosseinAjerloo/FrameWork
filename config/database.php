@@ -1,5 +1,5 @@
 <?php
 define('DBHOST','localhost');
-define('DBNAME','hossein');
+define('DBNAME','laravel11');
 define('DBUSER','root');
-define('DBPASSWORD','');
+define('DBPASSWORD','hr_hon4774');

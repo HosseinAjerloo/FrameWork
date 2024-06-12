@@ -66,6 +66,25 @@ trait HasRelation
     }
 
 
-    
+    protected function belongToMany($related, $pivotTable, $pivotFirstKey, $pivotSecondKey)
+    {
+        $related = new $related();
+        return $this->belongToManyRelation($related, $pivotTable, $pivotFirstKey, $pivotSecondKey);
+    }
+
+    private function belongToManyRelation($related, $pivotTable, $pivotFirstKey, $pivotSecondKey)
+    {
+        $this->setSql("SELECT `c`.* FROM ( SELECT `b`.* FROM {$this->getTableName()} as `a` join {$pivotTable} as `b` on `a`.{$this->primaryKey}=`b`.{$pivotFirstKey} where `a`.{$this->primaryKey}=?) as `r` join {$related->getTableName()} as `c` on `r`.$pivotSecondKey=`c`.{$related->primaryKey}  ; ");
+        $this->addValues($this->primaryKey, $this->{$this->primaryKey});
+
+        $statement = $this->executeQuery();
+        $data = $statement->fetchAll();
+        if ($data) {
+            $this->arrayToObject($data);
+            return $this->collection;
+        }
+        return null;
+    }
+
 
 }
