@@ -99,7 +99,7 @@ trait HasCRUD
         }
         $operation = 'AND';
         $this->setWhere($operation, $condition);
-        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate', 'first']);
         return $this;
 
     }
@@ -115,7 +115,7 @@ trait HasCRUD
         }
         $operation = 'OR';
         $this->setWhere($operation, $condition);
-        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate', 'first']);
         return $this;
 
     }
@@ -123,14 +123,14 @@ trait HasCRUD
     protected function whereNotNullMethod($attribute)
     {
         $this->setWhere('AND', $this->getAttributeName($attribute) . ' IS NOT NULL ');
-        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate', 'first']);
         return $this;
     }
 
     protected function whereNullMethod($attribute)
     {
         $this->setWhere('AND', $this->getAttributeName($attribute) . ' IS NULL ');
-        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'whereIn', 'paginate', 'first']);
         return $this;
     }
 
@@ -149,21 +149,21 @@ trait HasCRUD
         }
 
         $this->setWhere('ADN', $this->getAttributeName($attribute) . " IN (" . $condition . " )");
-        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'whereIn', 'orderBy', 'limit', 'get', 'whereNull', 'whereNotNull', 'whereOr', 'paginate', 'first']);
         return $this;
     }
 
     protected function orderByMethod($attribute, $expression)
     {
         $this->setOrderBy($this->getAttributeName($attribute), $expression);
-        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'limit', 'get', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'limit', 'get', 'paginate', 'first']);
         return $this;
     }
 
     protected function limitMethod($limit, $offset)
     {
         $this->setLimit($limit, $offset);
-        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'get', 'paginate']);
+        $this->setAllowedMethods(['delete', 'update', 'save', 'orderBy', 'get', 'paginate', 'first']);
         return $this;
     }
 
@@ -202,5 +202,18 @@ trait HasCRUD
         $fields = $this->arrayToCastEnCodeValue($fields);
         $this->arrayToAttributes($fields, $this);
         return $this->saveMethod();
+    }
+
+    protected function firstMethod()
+    {
+        if ($this->getSql() == '') {
+            $this->setSql('SELECT ' . $this->getTableName() . '.*' . ' FROM ' . $this->getTableName());
+        }
+        $statement = $this->executeQuery();
+        $record = $statement->fetch();
+        if ($record) {
+            return $this->arrayToAttributes($record);
+        }
+        return null;
     }
 }

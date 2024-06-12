@@ -48,6 +48,7 @@ trait HasSoftDelete
         return [];
 
     }
+
     protected function getMethod($fields = [])
     {
         if ($this->getSql() == '') {
@@ -71,5 +72,21 @@ trait HasSoftDelete
         }
         return [];
 
+    }
+
+    protected function firstMethod()
+    {
+        if ($this->getSql()=='')
+        {
+            $this->setSql('SELECT '.$this->getTableName().'.*'.' FROM '.$this->getTableName());
+        }
+        $this->whereNullMethod($this->deletedAt);
+        $statement=$this->executeQuery();
+        $record=$statement->fetch();
+        if ($record)
+        {
+            return $this->arrayToAttributes($record);
+        }
+        return  null;
     }
 }

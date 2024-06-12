@@ -4,9 +4,9 @@ namespace System\Database\Traits;
 trait HasMethodCaller
 {
     private $allMethod = ['get', 'save', 'all', 'create', 'update', 'where', 'whereNotNull', 'whereNull', 'whereIn', 'orderBy', 'limit', 'whereOr'
-        , 'find', 'delete'];
+        , 'find', 'delete','first'];
     private $allowedMethod = ['get', 'save', 'all', 'create', 'update', 'where', 'whereNotNull', 'whereNull', 'whereIn', 'orderBy', 'limit', 'whereOr'
-        , 'find', 'delete'];
+        , 'find', 'delete','first'];
 
     protected function setAllowedMethods($methodPermissions)
     {
@@ -15,7 +15,6 @@ trait HasMethodCaller
 
     private function methodCaller($object, $nameMethod, $argument)
     {
-        ;
         $suffix = 'Method';
         if (in_array($nameMethod, $this->allowedMethod)) {
             $nameMethod .= $suffix;
