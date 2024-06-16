@@ -13,7 +13,6 @@ class HomeController
 {
     public function index()
     {
-        $test=new Auth();
-        dd($test->hossein());
+       view('user');
     }
 }

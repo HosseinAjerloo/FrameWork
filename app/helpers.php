@@ -7,3 +7,8 @@ function dd($argument)
     echo "<pre>";
     exit();
 }
+function view($path)
+{
+    $view =new \System\View\ViewBuilder();
+    $view->run($path);
+}
